@@ -1,0 +1,44 @@
+{
+	"rules":{
+    "strict": [
+			2,
+			"global"
+    ],
+		"indent":[
+			2,
+			2
+		],
+		"quotes":[
+			1,
+			"double"
+		],
+		"linebreak-style":[
+			2,
+			"unix"
+		],
+		"semi":[
+			2,
+			"always"
+		],
+    "eqeqeq": 1,
+    "no-sync": 2,
+    "no-unneeded-ternary": 1,
+    "no-unreachable": 1,
+    "no-unused-expressions": 1,
+    "no-unused-vars": [1, {"vars": "all", "args": "after-used"}],
+    "prefer-arrow-callback": 1,
+    "quote-props": 1,
+    "valid-jsdoc": 2,
+    "valid-typeof": 2,
+    "no-console":1
+	},
+	"env":{
+		"es6":true,
+		"browser":false,
+		"node":true
+	},
+  "ecmaFeatures":{
+    "modules": true
+  },
+	"extends":"eslint:recommended"
+}

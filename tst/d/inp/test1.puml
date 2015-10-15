@@ -1,0 +1,38 @@
+@startuml
+
+skinparam {
+	shadowing false
+	default {
+		BorderColor #333333
+		ArrowColor #333333
+		Font {
+			Color MidnightBlue
+		}
+	}
+	activity {
+		BorderColor MidnightBlue
+		ArrowColor MidnightBlue
+		Font {
+			Color MidnightBlue
+		}
+		startColor MidnightBlue
+		endColor MidnightBlue
+		barColor MidnightBlue
+	}
+}
+
+title Test 1\n
+
+start
+
+:init;
+partition test {
+	while (tests remain) is (yes)
+	:run test;
+	end while (no)
+}
+:report;
+
+stop
+
+@enduml

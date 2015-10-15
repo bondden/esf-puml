@@ -1,0 +1,54 @@
+{
+  "name": "esf-puml",
+  "version": "0.4.0",
+  "description": "Renders puml-files from nested directories, a string or a single *.puml file",
+  "main": "index.js",
+  "scripts": {
+    "test": "tst/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bondden/esf-puml.git"
+  },
+  "keywords": [
+    "PlantUML",
+    "dot",
+    "uml"
+  ],
+  "author": "Denis Bondarenko <bond.den@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/bondden/esf-puml",
+  "directories" : {
+		"bin" : "./bin"
+	},
+  "files":[
+    "bin",
+    "src",
+    "tst",
+    ".eslintrc",
+    ".editorconfig",
+    ".gitattributes",
+    ".gitignore",
+    ".npmignore",
+    "gulpfile.js"
+  ],
+  "dependencies": {
+    "babel": "^5.8.23",
+    "fs-extra": "^0.24.0",
+    "svgo": "^0.5.6"
+  },
+  "devDependencies": {
+    "chai": "^3.3.0",
+    "es6-module-loader": "^0.17.8",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^5.2.1",
+    "gulp-changed": "^1.3.0",
+    "gulp-eslint": "^1.0.0",
+    "gulp-mocha": "^2.1.3",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-util": "^3.0.6",
+    "istanbul": "^0.3.22",
+    "mocha-lcov-reporter": "^1.0.0"
+  }
+}

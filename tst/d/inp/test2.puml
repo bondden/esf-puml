@@ -1,0 +1,55 @@
+@startuml
+
+!define BG DarkSlateGrey
+
+skinparam {
+	BackgroundColor BG
+	default {
+		Font {
+			Color LightGrey
+		}
+		BorderColor LightGrey
+	}
+	class {
+		BackgroundColor BG
+		BorderColor LightGrey
+		ArrowColor LightGrey
+	}
+	legend {
+		BackgroundColor BG
+		BorderColor BG
+	}
+}
+
+header
+
+	Test Project
+
+end header
+
+title Test 2\n
+
+class Basic {
+	+pubParam
+	+pvtParam
+	+getPvtParam()
+}
+
+class Fnc extends Basic {
+	+setPvtParam(parVal)
+}
+
+legend right
+	= Legend
+
+	This is a test diagram
+
+end legend
+
+footer
+
+	© bondden 2014
+
+end footer
+
+@enduml

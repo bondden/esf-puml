@@ -1,0 +1,20 @@
+!define BG DarkSlateGrey
+
+skinparam {
+	BackgroundColor BG
+	default {
+		Font {
+			Color LightGrey
+		}
+		BorderColor LightGrey
+	}
+	class {
+		BackgroundColor BG
+		BorderColor LightGrey
+		ArrowColor LightGrey
+	}
+	legend {
+		BackgroundColor BG
+		BorderColor BG
+	}
+}

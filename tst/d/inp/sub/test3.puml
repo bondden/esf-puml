@@ -1,0 +1,36 @@
+@startuml
+
+!include thm.puml
+
+header
+
+	Test Project
+
+end header
+
+title Test 3\n
+
+class Basic {
+	+pubParam
+	+pvtParam
+	+getPvtParam()
+}
+
+class Fnc extends Basic {
+	+setPvtParam(parVal)
+}
+
+legend right
+	= Legend
+
+	This is a test diagram
+
+end legend
+
+footer
+
+	© bondden 2014
+
+end footer
+
+@enduml
