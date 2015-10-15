@@ -25,6 +25,8 @@ pids
 *.pid
 *.seed
 
+tst/d/**/*.svg
+tst/d/**/*.png
 tst/ut-cov
 tst/basic-cocomo-*
 lcov.info

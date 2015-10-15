@@ -1,6 +1,10 @@
 # force LF
 * text eol=lf
 
+# jar
+*.jar binary
+*.png binary
+
 # Standard to msysgit
 *.doc	 diff=astextplain
 *.DOC	 diff=astextplain
