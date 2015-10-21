@@ -12,7 +12,7 @@ var
   svgoMod = require('svgo')
   ;
 
-export class PumlRenderer {
+export class PumlRenderer{
 
   constructor(){
 
@@ -48,7 +48,9 @@ export class PumlRenderer {
 
         let s=buf.toString('utf8');
 
-        let rxs='!include (((\.\/)?(\.\.\/)+)|(\.\/(\.\.\/)*))((.+)[\r\n])';
+        console.log(s);
+
+        let rxs='!include ((((\.\/)?(\.\.\/)+)|(\.\/(\.\.\/)*))((.+)[\r\n]))';
         let m=s.match(new RegExp(rxs,'ig'));
         if(m){
 
@@ -56,11 +58,11 @@ export class PumlRenderer {
 
             let before=v;
             let m1=before.match(new RegExp(rxs,'i'));
-            if(m1 && m1.length && m1.length>7){
+            if(m1 && m1.length && m1.length>1){
 
               let after=before.replace(
                 before,
-                path.normalize(cwd+'/'+m1[7]).replace(/[\/\\]/gi,path.sep)
+                '!include '+path.resolve(cwd+'/'+m1[1].replace(/[\/\\]/gi,path.sep))
               );
 
               s=s.replace(before,after);
@@ -69,6 +71,8 @@ export class PumlRenderer {
 
           });
         }
+
+        console.log(s);
 
         return new Buffer(s,'utf8');
 
@@ -124,9 +128,9 @@ export class PumlRenderer {
    */
   renderDir(inpDir,outDir){
     var H=this;
-    return new Promise(function(rs,rj){
+    return new Promise((rs,rj)=>{
 
-      var t=setInterval(function(){
+      var t=setInterval(()=>{
         process.stdout.write(' ->');
       },1000);
 
@@ -135,7 +139,7 @@ export class PumlRenderer {
         {
           encoding:"utf8"
         },
-        function(e,r){
+        (e,r)=>{
           if(e){
             clearInterval(t);
             rj(e);
@@ -149,7 +153,7 @@ export class PumlRenderer {
   }
 
   cleanSvgFile(fileOut){
-    var H=this;
+    //var H=this;
     return new Promise((rs,rj)=>{
 
       fs.readFile(fileOut,'utf8',(e1,r1)=>{
@@ -175,8 +179,6 @@ export class PumlRenderer {
           }
 
           let format=path.extname(fileOut);
-          let optimisedFileOut=fileOut.replace(format,'opt'+format);
-
           fileOut=path.resolve(fileOut.replace(format,'opt'+format));
 
           fs.writeFile(fileOut,r2.data,(e3,r3)=>{
@@ -244,7 +246,7 @@ export class PumlRenderer {
 
   renderString(strIn,fileOut,format='svg'){
     var H=this;
-    return new Promise(function(rs,rj){
+    return new Promise((rs,rj)=>{
 
       let qry=H._.createQryStr(strIn,fileOut,format);
       let pcs=exec(qry);
@@ -256,17 +258,17 @@ export class PumlRenderer {
         pcs.stdin.end();
       });
 
-      pcs.on('error', function (e){
+      pcs.on('error',(e)=>{
         rj(e);
         return e;
       });
 
-      pcs.stderr.on('data', function (data){
+      pcs.stderr.on('data',(data)=>{
         rj('stderr: '+data);
         return 1;
       });
 
-      pcs.on('close', function (code) {
+      pcs.on('close', (code)=>{
         if(code!==0){
           rj(new Error(qry+' exited with code '+code));
         }else{
@@ -280,7 +282,7 @@ export class PumlRenderer {
   /**
    * Renders a stream of utf8-encoded puml code to selected format. Currently supported SVG
    * @param  {string} format='svg' format of rendered image, supported formats: SVG. Default: SVG. Optional
-   * @param  {string}              custom CWD. Deault: null. Optional
+   * @param  {string} cwd.         custom CWD. Deault: null. Optional
    * @return {stream.Duplex}       returns a duplex stream, that can be piped in and out.
    */
   stream(format='svg',cwd=null){
@@ -296,9 +298,7 @@ export class PumlRenderer {
       write:function(d, encoding, next){
 
         if(cwd){
-
-          d=H._.customCwd(d);
-
+          d=H._.customCwd(d,cwd);
         }
 
         pcs.stdin.write(d,null,()=>{
@@ -320,11 +320,11 @@ export class PumlRenderer {
       stm.push(null);
     });
 
-    pcs.on('error', function (e){
+    pcs.on('error', (e)=>{
       stm.push(null);
     });
 
-    pcs.on('close', function (e){
+    pcs.on('close', ()=>{
       stm.push(null);
     });
 

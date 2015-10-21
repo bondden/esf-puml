@@ -25,7 +25,8 @@ pids
 *.pid
 *.seed
 
-tst/d/**/*.svg
+tst/d/out/*.svg
+#tst/d/**/*.svg
 tst/d/**/*.png
 tst/ut-cov
 tst/basic-cocomo-*

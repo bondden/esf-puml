@@ -7,219 +7,292 @@
 require('babel/polyfill');
 
 var
-	assert   =require('chai').assert,
-	path	 	 =require('path'),
-	fs  	 	 =require('fs-extra'),
-	exec     =require('child_process').exec,
+  assert   =require('chai').assert,
+  path     =require('path'),
+  fs       =require('fs-extra'),
+  exec     =require('child_process').exec,
 
-	Rdr      =require('../index.js').PumlRenderer
-;
+  Rdr      =require('../index.js').PumlRenderer
+  ;
 
 var rdr=null;
 var dir={
-	"inp":path.resolve(__dirname+'/d/inp'),
-	"out":path.resolve(__dirname+'/d/out')
+  "inp":path.resolve(__dirname+'/d/inp'),
+  "out":path.resolve(__dirname+'/d/out'),
+  "rt" :path.resolve(__dirname+'/d')
 };
 
 suite('ESF-PUML Suite',function(){
 
-	suite('init',function(){
+  suite('init',function(){
 
-		test('test Dot',(done)=>{
+    test.skip('test Dot',(done)=>{
 
-			exec(	'java -jar '+path.resolve(__dirname+'/../bin/plantuml.8031.jar')+' -testdot',(e,r)=>{
+      exec('java -jar '+path.resolve(__dirname+'/../bin/plantuml.8031.jar')+' -testdot',(e,r)=>{
         if(e){
-					done(e);
-					return e;
+          done(e);
+          return e;
         }
-				done();
+        done();
       });
 
-		});
+    });
 
-		test('It should init the app',(done)=>{
-			rdr=rdr||new Rdr();
-			assert.isObject(rdr, 'rdr should be an object');
-			done();
-		});
+    test.skip('It should init the app',(done)=>{
+      rdr=rdr||new Rdr();
+      assert.isObject(rdr, 'rdr should be an object');
+      done();
+    });
 
-	});
+  });
 
-	suite('run',function(){
-		this.timeout(60000);
+  suite('run',function(){
+    this.timeout(60000);
 
-		setup((done)=>{
+    setup((done)=>{
 
-			//clean out dir
-			fs.emptyDir(dir.out,(e)=>{
-				if(e){
-					done(e);
-				}else{
-					rdr=rdr||new Rdr();
-					done();
-				}
-			});
+      //clean out dir
+      fs.emptyDir(dir.out,(e)=>{
+        if(e){
+          done(e);
+        }else{
+          rdr=rdr||new Rdr();
+          done();
+        }
+      });
 
-		});
+    });
 
-		test('renderDir',(done)=>{
-			rdr.renderDir(dir.inp,dir.out).then((r)=>{
+    test.skip('renderDir',(done)=>{
+      rdr.renderDir(dir.inp,dir.out).then((r)=>{
 
-				fs.readdir(dir.out,(e,d)=>{
+        fs.readdir(dir.out,(e,d)=>{
 
-					if(e){
-						done(e);
-						return e;
-					}
+          if(e){
+            done(e);
+            return e;
+          }
 
-					assert.isArray(d,'d should be an array');
-					assert.equal(d.length,3,'there should be 3 files (recursive process dirs)');
-					assert.deepEqual(d,['test1.svg','test2.svg','test3.svg'],'files should be *.svg');
+          console.log('');
 
-					done();
+          assert.isArray(d,'d should be an array');
+          assert.equal(d.length,3,'there should be 3 files (recursive process dirs)');
+          assert.deepEqual(d,['test1.svg','test2.svg','test3.svg'],'files should be *.svg');
 
-				});
+          done();
 
-			}).catch((e)=>{
-				done(e);
-			});
+        });
 
-		});
+      }).catch((e)=>{
+        done(e);
+      });
 
-		test('renderFile to png',(done)=>{
+    });
 
-			rdr.renderFile(
-				path.resolve(dir.inp+'/test1.puml'),
-				dir.out,
-				'png'
-			).then((r)=>{
+    test.skip('renderFile to png',(done)=>{
 
-				fs.readdir(dir.out,(e,d)=>{
+      rdr.renderFile(
+        path.resolve(dir.inp+'/test1.puml'),
+        dir.out,
+        'png'
+      ).then((r)=>{
 
-					if(e){
-						done(e);
-						return e;
-					}
+        fs.readdir(dir.out,(e,d)=>{
 
-					assert.isArray(d,'d should be an array');
-					assert.equal(d.length,1,'there should be 1 file rendered');
-					assert.deepEqual(d,['test1.png'],'files should be file `test1.png`');
+          if(e){
+            done(e);
+            return e;
+          }
 
-					done();
+          assert.isArray(d,'d should be an array');
+          assert.equal(d.length,1,'there should be 1 file rendered');
+          assert.deepEqual(d,['test1.png'],'files should be file `test1.png`');
 
-				});
+          done();
 
-			}).catch((e)=>{
-				done(e);
-			});
+        });
 
-		});
+      }).catch((e)=>{
+        done(e);
+      });
 
-		test('renderString',(done)=>{
+    });
 
-			var tstStr=`
-			@startuml
+    test.skip('renderString',(done)=>{
 
-			title Test 4
+      var tstStr=`
+      @startuml
 
-			class TstCls1 {
-				+var1
-				+mtd1()
-			}
+      title Test 4
 
-			class TstCls2 {
-				+var1
-				+mtd1()
-			}
+      class TstCls1 {
+        +var1
+        +mtd1()
+      }
 
-			TstCls2 -> TstCls1
+      class TstCls2 {
+        +var1
+        +mtd1()
+      }
 
-			footer
-				test
-			end footer
+      TstCls2 -> TstCls1
 
-			@enduml
-			`;
+      footer
+        test
+      end footer
 
-			rdr.renderString(
-				tstStr,
-				path.resolve(dir.out+'/test4.png'),
-				'png'
-			).then((r)=>{
+      @enduml
+      `;
 
-				fs.readdir(dir.out,(e,d)=>{
+      rdr.renderString(
+        tstStr,
+        path.resolve(dir.out+'/test4.png'),
+        'png'
+      ).then((r)=>{
 
-					if(e){
-						done(e);
-						return e;
-					}
+        fs.readdir(dir.out,(e,d)=>{
 
-					assert.isArray(d,'d should be an array');
-					assert.equal(d.length,1,'there should be 1 file rendered');
-					assert.deepEqual(d,['test4.png'],'files should be file `test4.png`');
+          if(e){
+            done(e);
+            return e;
+          }
 
-					done();
+          assert.isArray(d,'d should be an array');
+          assert.equal(d.length,1,'there should be 1 file rendered');
+          assert.deepEqual(d,['test4.png'],'files should be file `test4.png`');
 
-				});
+          done();
 
-			}).catch((e)=>{
-				done(e);
-			});
+        });
 
-		});
+      }).catch((e)=>{
+        done(e);
+      });
 
-		test('stream png',(done)=>{
+    });
 
-			try{
+    test.skip('stream png',(done)=>{
 
-				var rs=fs.createReadStream ( path.resolve(dir.inp+'/test2.puml'),{encoding:'utf8', autoClose: true} );
-				var ws=fs.createWriteStream( path.resolve(dir.out+'/test5.png' ) );
-				var ps=rdr.stream('png');
+      try{
 
-				rs
-				.pipe(ps)
-				.pipe(ws);
+        var rs=fs.createReadStream ( path.resolve(dir.inp+'/test2.puml'),{encoding:'utf8', autoClose: true} );
+        var ws=fs.createWriteStream( path.resolve(dir.out+'/test5.png' ) );
+        var ps=rdr.stream('png');
 
-				ws.on('error',(e)=>{
-					done(e);
-				});
+        rs
+        .pipe(ps)
+        .pipe(ws);
 
-				ws.on('finish',()=>{
-					done();
-				});
+        ws.on('error',(e)=>{
+          done(e);
+        });
 
-			}catch(e){
-				done(e);
-			}
+        ws.on('finish',()=>{
+          done();
+        });
 
-		});
+      }catch(e){
+        done(e);
+      }
 
-		test('stream svg',(done)=>{
+    });
 
-			try{
+    test.skip('stream svg',(done)=>{
 
-				var rs=fs.createReadStream ( path.resolve(dir.inp+'/test2.puml'),{encoding:'utf8', autoClose: true} );
-				var ws=fs.createWriteStream( path.resolve(dir.out+'/test5.svg' ) );
-				var ps=rdr.stream('svg');
+      var etalon='etalon';
+      fs.readFile(path.resolve(dir.rt+'/test5.etalon.svg'),{encoding:"utf8"},(e,r)=>{
 
-				rs
-				.pipe(ps)
-				.pipe(ws);
+        if(e){
+          done(e);
+          return e;
+        }
 
-				ws.on('error',(e)=>{
-					done(e);
-				});
+        etalon=r;
 
-				ws.on('finish',()=>{
-					done();
-				});
+        try{
 
-			}catch(e){
-				done(e);
-			}
+          var rs=fs.createReadStream ( path.resolve(dir.inp+'/test2.puml'),{encoding:'utf8', autoClose: true} );
+          var ws=fs.createWriteStream( path.resolve(dir.out+'/test5.svg' ) );
+          var ps=rdr.stream('svg');
 
-		});
+          rs
+            .pipe(ps)
+            .pipe(ws);
 
-	});
+          ws.on('error',(e)=>{
+            done(e);
+          });
+
+          ws.on('finish',()=>{
+
+            fs.readFile(path.resolve(dir.out+'/test5.svg'),{encoding:"utf8"},(e1,r1)=>{
+
+              if(e1){
+                done(e1);
+                return e1;
+              }
+
+              assert.equal(r1,etalon,'checking content generated properly');
+
+              done();
+
+            });
+
+          });
+
+        }catch(e){
+          done(e);
+        }
+
+      });
+
+    });
+
+    test('relative include path with custom cwd set',(done)=>{
+
+      var
+        etalon ='etalon',
+        inpFile=path.resolve(dir.rt+'/inp_rel/sub/test6.puml'),
+        outFile=path.resolve(dir.out+'/test6.svg')
+        ;
+
+      try{
+
+        var rs=fs.createReadStream ( inpFile,{encoding:'utf8', autoClose: true} );
+        var ws=fs.createWriteStream(outFile);
+        var ps=rdr.stream('svg',path.dirname(inpFile));
+
+        rs
+          .pipe(ps)
+          .pipe(ws);
+
+        ws.on('error',(e)=>{
+          done(e);
+        });
+
+        ws.on('finish',()=>{
+
+          fs.readFile(outFile,{encoding:"utf8"},(e1,r1)=>{
+
+            if(e1){
+              done(e1);
+              return e1;
+            }
+
+            //assert.equal(r1,etalon,'checking content generated properly');
+
+            done();
+
+          });
+
+        });
+
+      }catch(e){
+        done(e);
+      }
+
+    });
+
+  });
 
 });

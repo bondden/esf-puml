@@ -54,7 +54,9 @@ var PumlRenderer = (function () {
 
         var s = buf.toString('utf8');
 
-        var rxs = '!include (((\.\/)?(\.\.\/)+)|(\.\/(\.\.\/)*))((.+)[\r\n])';
+        console.log(s);
+
+        var rxs = '!include ((((\.\/)?(\.\.\/)+)|(\.\/(\.\.\/)*))((.+)[\r\n]))';
         var m = s.match(new RegExp(rxs, 'ig'));
         if (m) {
 
@@ -62,14 +64,16 @@ var PumlRenderer = (function () {
 
             var before = v;
             var m1 = before.match(new RegExp(rxs, 'i'));
-            if (m1 && m1.length && m1.length > 7) {
+            if (m1 && m1.length && m1.length > 1) {
 
-              var after = before.replace(before, path.normalize(cwd + '/' + m1[7]).replace(/[\/\\]/gi, path.sep));
+              var after = before.replace(before, '!include ' + path.resolve(cwd + '/' + m1[1].replace(/[\/\\]/gi, path.sep)));
 
               s = s.replace(before, after);
             }
           });
         }
+
+        console.log(s);
 
         return new Buffer(s, 'utf8');
       },
@@ -136,7 +140,7 @@ var PumlRenderer = (function () {
   }, {
     key: 'cleanSvgFile',
     value: function cleanSvgFile(fileOut) {
-      var H = this;
+      //var H=this;
       return new Promise(function (rs, rj) {
 
         fs.readFile(fileOut, 'utf8', function (e1, r1) {
@@ -160,8 +164,6 @@ var PumlRenderer = (function () {
             }
 
             var format = path.extname(fileOut);
-            var optimisedFileOut = fileOut.replace(format, 'opt' + format);
-
             fileOut = path.resolve(fileOut.replace(format, 'opt' + format));
 
             fs.writeFile(fileOut, r2.data, function (e3, r3) {
@@ -260,7 +262,7 @@ var PumlRenderer = (function () {
     /**
      * Renders a stream of utf8-encoded puml code to selected format. Currently supported SVG
      * @param  {string} format='svg' format of rendered image, supported formats: SVG. Default: SVG. Optional
-     * @param  {string}              custom CWD. Deault: null. Optional
+     * @param  {string} cwd.         custom CWD. Deault: null. Optional
      * @return {stream.Duplex}       returns a duplex stream, that can be piped in and out.
      */
   }, {
@@ -280,8 +282,7 @@ var PumlRenderer = (function () {
         write: function write(d, encoding, next) {
 
           if (cwd) {
-
-            d = H._.customCwd(d);
+            d = H._.customCwd(d, cwd);
           }
 
           pcs.stdin.write(d, null, function () {
@@ -306,7 +307,7 @@ var PumlRenderer = (function () {
         stm.push(null);
       });
 
-      pcs.on('close', function (e) {
+      pcs.on('close', function () {
         stm.push(null);
       });
 

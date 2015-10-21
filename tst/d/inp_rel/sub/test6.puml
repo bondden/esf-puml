@@ -1,0 +1,11 @@
+@startuml
+
+!include ../../inp/sub/thm.puml
+!include ./../inc/inc.puml
+
+interface Collection
+
+Collection <|-- AbstractCollection
+
+
+@enduml
