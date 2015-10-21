@@ -10,7 +10,7 @@ var
   stream  = require('stream'),
   exec    = require('child_process').exec,
   svgoMod = require('svgo')
-;
+  ;
 
 export class PumlRenderer {
 
@@ -41,6 +41,36 @@ export class PumlRenderer {
         }
 
         return fmtOpt;
+
+      },
+
+      "customCwd"    :function(buf,cwd){
+
+        let s=buf.toString('utf8');
+
+        let rxs='!include (((\.\/)?(\.\.\/)+)|(\.\/(\.\.\/)*))((.+)[\r\n])';
+        let m=s.match(new RegExp(rxs,'ig'));
+        if(m){
+
+          m.forEach((v,i,a)=>{
+
+            let before=v;
+            let m1=before.match(new RegExp(rxs,'i'));
+            if(m1 && m1.length && m1.length>7){
+
+              let after=before.replace(
+                before,
+                path.normalize(cwd+'/'+m1[7]).replace(/[\/\\]/gi,path.sep)
+              );
+
+              s=s.replace(before,after);
+
+            }
+
+          });
+        }
+
+        return new Buffer(s,'utf8');
 
       },
 
@@ -80,7 +110,7 @@ export class PumlRenderer {
 
       }
 
-    }
+    };
 
   }
 
@@ -144,7 +174,10 @@ export class PumlRenderer {
             return e2;
           }
 
-          fileOut=path.resolve(dirOut+'/'+fileOutBase+'.opt.'+format);
+          let format=path.extname(fileOut);
+          let optimisedFileOut=fileOut.replace(format,'opt'+format);
+
+          fileOut=path.resolve(fileOut.replace(format,'opt'+format));
 
           fs.writeFile(fileOut,r2.data,(e3,r3)=>{
 
@@ -247,9 +280,12 @@ export class PumlRenderer {
   /**
    * Renders a stream of utf8-encoded puml code to selected format. Currently supported SVG
    * @param  {string} format='svg' format of rendered image, supported formats: SVG. Default: SVG. Optional
+   * @param  {string}              custom CWD. Deault: null. Optional
    * @return {stream.Duplex}       returns a duplex stream, that can be piped in and out.
    */
-  stream(format='svg'){
+  stream(format='svg',cwd=null){
+
+    var H=this;
 
     let pcs=exec(this._.createQryStm(format));
 
@@ -258,6 +294,12 @@ export class PumlRenderer {
         //console.log('To read: '+n);
       },
       write:function(d, encoding, next){
+
+        if(cwd){
+
+          d=H._.customCwd(d);
+
+        }
 
         pcs.stdin.write(d,null,()=>{
           pcs.stdin.end();

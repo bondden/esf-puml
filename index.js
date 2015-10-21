@@ -50,6 +50,30 @@ var PumlRenderer = (function () {
         return fmtOpt;
       },
 
+      "customCwd": function customCwd(buf, cwd) {
+
+        var s = buf.toString('utf8');
+
+        var rxs = '!include (((\.\/)?(\.\.\/)+)|(\.\/(\.\.\/)*))((.+)[\r\n])';
+        var m = s.match(new RegExp(rxs, 'ig'));
+        if (m) {
+
+          m.forEach(function (v, i, a) {
+
+            var before = v;
+            var m1 = before.match(new RegExp(rxs, 'i'));
+            if (m1 && m1.length && m1.length > 7) {
+
+              var after = before.replace(before, path.normalize(cwd + '/' + m1[7]).replace(/[\/\\]/gi, path.sep));
+
+              s = s.replace(before, after);
+            }
+          });
+        }
+
+        return new Buffer(s, 'utf8');
+      },
+
       "createQryDir": function createQryDir(inpDir, outDir) {
         var fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
 
@@ -135,7 +159,10 @@ var PumlRenderer = (function () {
               return e2;
             }
 
-            fileOut = path.resolve(dirOut + '/' + fileOutBase + '.opt.' + format);
+            var format = path.extname(fileOut);
+            var optimisedFileOut = fileOut.replace(format, 'opt' + format);
+
+            fileOut = path.resolve(fileOut.replace(format, 'opt' + format));
 
             fs.writeFile(fileOut, r2.data, function (e3, r3) {
 
@@ -233,12 +260,16 @@ var PumlRenderer = (function () {
     /**
      * Renders a stream of utf8-encoded puml code to selected format. Currently supported SVG
      * @param  {string} format='svg' format of rendered image, supported formats: SVG. Default: SVG. Optional
+     * @param  {string}              custom CWD. Deault: null. Optional
      * @return {stream.Duplex}       returns a duplex stream, that can be piped in and out.
      */
   }, {
     key: 'stream',
     value: function stream() {
       var format = arguments.length <= 0 || arguments[0] === undefined ? 'svg' : arguments[0];
+      var cwd = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+      var H = this;
 
       var pcs = exec(this._.createQryStm(format));
 
@@ -247,6 +278,11 @@ var PumlRenderer = (function () {
           //console.log('To read: '+n);
         },
         write: function write(d, encoding, next) {
+
+          if (cwd) {
+
+            d = H._.customCwd(d);
+          }
 
           pcs.stdin.write(d, null, function () {
             pcs.stdin.end();

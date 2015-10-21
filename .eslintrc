@@ -1,7 +1,7 @@
 {
 	"rules":{
     "strict": [
-			2,
+			1,
 			"global"
     ],
 		"indent":[

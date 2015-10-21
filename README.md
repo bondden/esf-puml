@@ -64,7 +64,8 @@ The module includes the MIT licensed version, available from [MIT licensed Plant
 Promise         renderDir    (string inpDir, outDir, [,format='svg'])                 //
 Promise         renderFile   (string inpFilePath, string outDir [,format='svg'])      //
 Promise         renderString (string pumlString, string outFilePath [,format='svg'])  //
-stream.Duplex   stream       ([,format='svg'])                                        //
+stream.Duplex   stream       ([,format='svg'][,cwd=null])                             // custom CWd
 ```
 
 -----
+MIT © [bondden](https://github.com/bondden) 2015
