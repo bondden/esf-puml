@@ -26,7 +26,7 @@ suite('ESF-PUML Suite',function(){
 
   suite('init',function(){
 
-    test.skip('test Dot',(done)=>{
+    test('test Dot',(done)=>{
 
       exec('java -jar '+path.resolve(__dirname+'/../bin/plantuml.8031.jar')+' -testdot',(e,r)=>{
         if(e){
@@ -38,7 +38,7 @@ suite('ESF-PUML Suite',function(){
 
     });
 
-    test.skip('It should init the app',(done)=>{
+    test('It should init the app',(done)=>{
       rdr=rdr||new Rdr();
       assert.isObject(rdr, 'rdr should be an object');
       done();
@@ -63,7 +63,7 @@ suite('ESF-PUML Suite',function(){
 
     });
 
-    test.skip('renderDir',(done)=>{
+    test('renderDir',(done)=>{
       rdr.renderDir(dir.inp,dir.out).then((r)=>{
 
         fs.readdir(dir.out,(e,d)=>{
@@ -89,7 +89,7 @@ suite('ESF-PUML Suite',function(){
 
     });
 
-    test.skip('renderFile to png',(done)=>{
+    test('renderFile to png',(done)=>{
 
       rdr.renderFile(
         path.resolve(dir.inp+'/test1.puml'),
@@ -118,7 +118,7 @@ suite('ESF-PUML Suite',function(){
 
     });
 
-    test.skip('renderString',(done)=>{
+    test('renderString',(done)=>{
 
       var tstStr=`
       @startuml
@@ -171,7 +171,7 @@ suite('ESF-PUML Suite',function(){
 
     });
 
-    test.skip('stream png',(done)=>{
+    test('stream png',(done)=>{
 
       try{
 
@@ -197,7 +197,7 @@ suite('ESF-PUML Suite',function(){
 
     });
 
-    test.skip('stream svg',(done)=>{
+    test('stream svg',(done)=>{
 
       var etalon='etalon';
       fs.readFile(path.resolve(dir.rt+'/test5.etalon.svg'),{encoding:"utf8"},(e,r)=>{

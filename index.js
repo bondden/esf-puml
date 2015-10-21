@@ -54,8 +54,6 @@ var PumlRenderer = (function () {
 
         var s = buf.toString('utf8');
 
-        console.log(s);
-
         var rxs = '!include ((((\.\/)?(\.\.\/)+)|(\.\/(\.\.\/)*))((.+)[\r\n]))';
         var m = s.match(new RegExp(rxs, 'ig'));
         if (m) {
@@ -72,8 +70,6 @@ var PumlRenderer = (function () {
             }
           });
         }
-
-        console.log(s);
 
         return new Buffer(s, 'utf8');
       },

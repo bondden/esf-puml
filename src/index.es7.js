@@ -48,8 +48,6 @@ export class PumlRenderer{
 
         let s=buf.toString('utf8');
 
-        console.log(s);
-
         let rxs='!include ((((\.\/)?(\.\.\/)+)|(\.\/(\.\.\/)*))((.+)[\r\n]))';
         let m=s.match(new RegExp(rxs,'ig'));
         if(m){
@@ -71,8 +69,6 @@ export class PumlRenderer{
 
           });
         }
-
-        console.log(s);
 
         return new Buffer(s,'utf8');
 
