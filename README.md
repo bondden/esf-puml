@@ -1,5 +1,7 @@
 # PlantUML Renderer
 
+[![Code Climate](https://codeclimate.com/github/bondden/esf-puml/badges/gpa.svg)](https://codeclimate.com/github/bondden/esf-puml)
+
 A Node.Js module for converting [PlantUML](http://plantuml.com) files to graphics formats: SVG, PNG, EPS.
 
 ## System Requirements
