@@ -1,0 +1,16 @@
+engines:
+  rubocop:
+    enabled: false
+  golint:
+    enabled: false
+  gofmt:
+    enabled: false
+  eslint:
+    enabled: true
+  csslint:
+    enabled: false
+ratings:
+   paths:
+   - src/**
+exclude_paths:
+- ".pcs"
