@@ -4,27 +4,23 @@
 "use strict";
 
 //todo: implement ESF coding standards
-Object.defineProperty(exports, '__esModule', {
+
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
 var fs = require('fs-extra'),
     path = require('path'),
-    _stream = require('stream'),
+    stream = require('stream'),
     exec = require('child_process').exec,
     svgoMod = require('svgo');
 
-var PumlRenderer = (function () {
-  function PumlRenderer() {
-    _classCallCheck(this, PumlRenderer);
+class PumlRenderer {
+
+  constructor() {
 
     var H = this;
 
-    this.pumlJar = 'bin/plantuml.8031.jar';
+    this.pumlJar = 'bin/plantuml.8033.jar';
     this.jarPth = path.resolve(__dirname + '/' + this.pumlJar);
 
     this.supportedFormats = {
@@ -40,9 +36,9 @@ var PumlRenderer = (function () {
     this._ = {
 
       "setFmt": function setFmt() {
-        var fmt = arguments.length <= 0 || arguments[0] === undefined ? 'svg' : arguments[0];
+        let fmt = arguments.length <= 0 || arguments[0] === undefined ? 'svg' : arguments[0];
 
-        var fmtOpt = H.supportedFormats.svg;
+        let fmtOpt = H.supportedFormats.svg;
         if (H.supportedFormats.hasOwnProperty(fmt)) {
           fmtOpt = H.supportedFormats[fmt];
         }
@@ -52,19 +48,19 @@ var PumlRenderer = (function () {
 
       "customCwd": function customCwd(buf, cwd) {
 
-        var s = buf.toString('utf8');
+        let s = buf.toString('utf8');
 
-        var rxs = '!include ((((\.\/)?(\.\.\/)+)|(\.\/(\.\.\/)*))((.+)[\r\n]))';
-        var m = s.match(new RegExp(rxs, 'ig'));
+        let rxs = '!include ((((\.\/)?(\.\.\/)+)|(\.\/(\.\.\/)*))((.+)[\r\n]))';
+        let m = s.match(new RegExp(rxs, 'ig'));
         if (m) {
 
-          m.forEach(function (v, i, a) {
+          m.forEach((v, i, a) => {
 
-            var before = v;
-            var m1 = before.match(new RegExp(rxs, 'i'));
+            let before = v;
+            let m1 = before.match(new RegExp(rxs, 'i'));
             if (m1 && m1.length && m1.length > 1) {
 
-              var after = before.replace(before, '!include ' + path.resolve(cwd + '/' + m1[1].replace(/[\/\\]/gi, path.sep)));
+              let after = before.replace(before, '!include ' + path.resolve(cwd + '/' + m1[1].replace(/[\/\\]/gi, path.sep)));
 
               s = s.replace(before, after);
             }
@@ -75,25 +71,25 @@ var PumlRenderer = (function () {
       },
 
       "createQryDir": function createQryDir(inpDir, outDir) {
-        var fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
+        let fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
 
         return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-o "' + outDir + '" "' + path.resolve(inpDir + '/**.puml') + '"';
       },
 
       "createQryFile": function createQryFile(inp, out) {
-        var fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
+        let fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
 
         return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-o "' + out + '" "' + inp + '"';
       },
 
       "createQryStr": function createQryStr(inpStr, outFile) {
-        var fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
+        let fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
 
         return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-pipe > "' + outFile + '"';
       },
 
       "createQryStm": function createQryStm() {
-        var fmt = arguments.length <= 0 || arguments[0] === undefined ? 'svg' : arguments[0];
+        let fmt = arguments.length <= 0 || arguments[0] === undefined ? 'svg' : arguments[0];
 
         return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-pipe';
       }
@@ -109,210 +105,198 @@ var PumlRenderer = (function () {
    * @param  {string}  outDir output directory to save rendered files
    * @return {Promise}        returns a Promise, tha is resolved on process end.
    */
+  renderDir(inpDir, outDir) {
+    var H = this;
+    return new Promise((rs, rj) => {
 
-  _createClass(PumlRenderer, [{
-    key: 'renderDir',
-    value: function renderDir(inpDir, outDir) {
-      var H = this;
-      return new Promise(function (rs, rj) {
+      var t = setInterval(() => {
+        process.stdout.write(' ->');
+      }, 1000);
 
-        var t = setInterval(function () {
-          process.stdout.write(' ->');
-        }, 1000);
-
-        exec(H._.createQryDir(inpDir, outDir), {
-          encoding: "utf8"
-        }, function (e, r) {
-          if (e) {
-            clearInterval(t);
-            rj(e);
-            return e;
-          }
+      exec(H._.createQryDir(inpDir, outDir), {
+        encoding: "utf8"
+      }, (e, r) => {
+        if (e) {
           clearInterval(t);
-          rs(true);
-        });
-      });
-    }
-  }, {
-    key: 'cleanSvgFile',
-    value: function cleanSvgFile(fileOut) {
-      //var H=this;
-      return new Promise(function (rs, rj) {
-
-        fs.readFile(fileOut, 'utf8', function (e1, r1) {
-
-          if (e1) {
-            rj(e1);
-            return e1;
-          }
-
-          var svgo = new svgoMod({
-            plugins: [{
-              cleanupIDs: false
-            }]
-          });
-          svgo.optimize(r1, function (r2) {
-
-            if (!r2) {
-              var e2 = new Error('SVG Optimisation Error');
-              rj(e2);
-              return e2;
-            }
-
-            var format = path.extname(fileOut);
-            fileOut = path.resolve(fileOut.replace(format, 'opt' + format));
-
-            fs.writeFile(fileOut, r2.data, function (e3, r3) {
-
-              if (e3) {
-                rj(e3);
-                return e3;
-              }
-
-              rs(fileOut);
-            });
-          });
-        });
-      });
-    }
-
-    /**
-     * Renders a single puml to an image of one of supported by PlantUML formats
-     * @param  {string} fileIn       path to input file
-     * @param  {string} dirOut       output directory
-     * @param  {string} format='svg' format of rendered image, supported formats: SVG, PNG, EPS. Default: SVG. Optional
-     * @return {Promise}             returns a Promise
-     */
-  }, {
-    key: 'renderFile',
-    value: function renderFile(fileIn, dirOut) {
-      var format = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
-
-      var H = this;
-      return new Promise(function (rs, rj) {
-
-        exec(H._.createQryFile(fileIn, dirOut, format), {
-          encoding: "utf8"
-        }, function (e, r) {
-
-          if (e) {
-            rj(e);
-            return e;
-          }
-
-          var fileOutBase = path.basename(fileIn, '.puml');
-          var fileOut = path.resolve(dirOut + '/' + fileOutBase + '.' + format);
-
-          if (format === 'svg') {
-
-            H.cleanSvgFile(fileOut).then(function (r) {
-              rs(fileOut);
-            })['catch'](function (e) {
-              rj(e);
-              return e;
-            });
-          } else {
-            rs(fileOut);
-          }
-        });
-      });
-    }
-  }, {
-    key: 'renderString',
-    value: function renderString(strIn, fileOut) {
-      var format = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
-
-      var H = this;
-      return new Promise(function (rs, rj) {
-
-        var qry = H._.createQryStr(strIn, fileOut, format);
-        var pcs = exec(qry);
-
-        pcs.stdin.write(strIn, function (e) {
-          if (e) {
-            rj(e);
-          }
-          pcs.stdin.end();
-        });
-
-        pcs.on('error', function (e) {
           rj(e);
           return e;
-        });
+        }
+        clearInterval(t);
+        rs(true);
+      });
+    });
+  }
 
-        pcs.stderr.on('data', function (data) {
-          rj('stderr: ' + data);
-          return 1;
-        });
+  cleanSvgFile(fileOut) {
+    //var H=this;
+    return new Promise((rs, rj) => {
 
-        pcs.on('close', function (code) {
-          if (code !== 0) {
-            rj(new Error(qry + ' exited with code ' + code));
-          } else {
-            rs(code);
+      fs.readFile(fileOut, 'utf8', (e1, r1) => {
+
+        if (e1) {
+          rj(e1);
+          return e1;
+        }
+
+        let svgo = new svgoMod({
+          plugins: [{
+            cleanupIDs: false
+          }]
+        });
+        svgo.optimize(r1, r2 => {
+
+          if (!r2) {
+            let e2 = new Error('SVG Optimisation Error');
+            rj(e2);
+            return e2;
           }
+
+          let format = path.extname(fileOut);
+          fileOut = path.resolve(fileOut.replace(format, 'opt' + format));
+
+          fs.writeFile(fileOut, r2.data, (e3, r3) => {
+
+            if (e3) {
+              rj(e3);
+              return e3;
+            }
+
+            rs(fileOut);
+          });
         });
       });
-    }
+    });
+  }
 
-    /**
-     * Renders a stream of utf8-encoded puml code to selected format. Currently supported SVG
-     * @param  {string} format='svg' format of rendered image, supported formats: SVG. Default: SVG. Optional
-     * @param  {string} cwd.         custom CWD. Deault: null. Optional
-     * @return {stream.Duplex}       returns a duplex stream, that can be piped in and out.
-     */
-  }, {
-    key: 'stream',
-    value: function stream() {
-      var format = arguments.length <= 0 || arguments[0] === undefined ? 'svg' : arguments[0];
-      var cwd = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+  /**
+   * Renders a single puml to an image of one of supported by PlantUML formats
+   * @param  {string} fileIn       path to input file
+   * @param  {string} dirOut       output directory
+   * @param  {string} format='svg' format of rendered image, supported formats: SVG, PNG, EPS. Default: SVG. Optional
+   * @return {Promise}             returns a Promise
+   */
+  renderFile(fileIn, dirOut) {
+    let format = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
 
-      var H = this;
+    var H = this;
+    return new Promise((rs, rj) => {
 
-      var pcs = exec(this._.createQryStm(format));
+      exec(H._.createQryFile(fileIn, dirOut, format), {
+        encoding: "utf8"
+      }, (e, r) => {
 
-      var stm = _stream.Duplex({
-        read: function read(n) {
-          //console.log('To read: '+n);
-        },
-        write: function write(d, encoding, next) {
+        if (e) {
+          rj(e);
+          return e;
+        }
 
-          if (cwd) {
-            d = H._.customCwd(d, cwd);
-          }
+        let fileOutBase = path.basename(fileIn, '.puml');
+        let fileOut = path.resolve(dirOut + '/' + fileOutBase + '.' + format);
 
-          pcs.stdin.write(d, null, function () {
-            pcs.stdin.end();
+        if (format === 'svg') {
+
+          H.cleanSvgFile(fileOut).then(r => {
+            rs(fileOut);
+          }).catch(e => {
+            rj(e);
+            return e;
           });
+        } else {
+          rs(fileOut);
         }
       });
+    });
+  }
 
-      pcs.stdout.on('data', function (d) {
-        stm.push(d);
+  renderString(strIn, fileOut) {
+    let format = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
+
+    var H = this;
+    return new Promise((rs, rj) => {
+
+      let qry = H._.createQryStr(strIn, fileOut, format);
+      let pcs = exec(qry);
+
+      pcs.stdin.write(strIn, e => {
+        if (e) {
+          rj(e);
+        }
+        pcs.stdin.end();
       });
 
-      pcs.stdout.on('end', function () {
-        stm.push(null);
+      pcs.on('error', e => {
+        rj(e);
+        return e;
       });
 
-      pcs.stderr.on('data', function (v) {
-        stm.push(null);
+      pcs.stderr.on('data', data => {
+        rj('stderr: ' + data);
+        return 1;
       });
 
-      pcs.on('error', function (e) {
-        stm.push(null);
+      pcs.on('close', code => {
+        if (code !== 0) {
+          rj(new Error(qry + ' exited with code ' + code));
+        } else {
+          rs(code);
+        }
       });
+    });
+  }
 
-      pcs.on('close', function () {
-        stm.push(null);
-      });
+  /**
+   * Renders a stream of utf8-encoded puml code to selected format. Currently supported SVG
+   * @param  {string} format='svg' format of rendered image, supported formats: SVG. Default: SVG. Optional
+   * @param  {string} cwd.         custom CWD. Deault: null. Optional
+   * @return {stream.Duplex}       returns a duplex stream, that can be piped in and out.
+   */
+  stream() {
+    let format = arguments.length <= 0 || arguments[0] === undefined ? 'svg' : arguments[0];
+    let cwd = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
-      return stm;
-    }
-  }]);
+    var H = this;
 
-  return PumlRenderer;
-})();
+    let pcs = exec(this._.createQryStm(format));
 
+    let stm = stream.Duplex({
+      read: function read(n) {
+        //console.log('To read: '+n);
+      },
+      write: function write(d, encoding, next) {
+
+        if (cwd) {
+          d = H._.customCwd(d, cwd);
+        }
+
+        pcs.stdin.write(d, null, () => {
+          pcs.stdin.end();
+        });
+      }
+    });
+
+    pcs.stdout.on('data', d => {
+      stm.push(d);
+    });
+
+    pcs.stdout.on('end', () => {
+      stm.push(null);
+    });
+
+    pcs.stderr.on('data', v => {
+      stm.push(null);
+    });
+
+    pcs.on('error', e => {
+      stm.push(null);
+    });
+
+    pcs.on('close', () => {
+      stm.push(null);
+    });
+
+    return stm;
+  }
+
+}
 exports.PumlRenderer = PumlRenderer;
 //# sourceMappingURL=.maps/index.es7.js.map

@@ -4,8 +4,6 @@
 //todo: create tests for incorrect data abd error handling
 'use strict';
 
-require('babel/polyfill');
-
 var
   assert   =require('chai').assert,
   path     =require('path'),
@@ -28,7 +26,7 @@ suite('ESF-PUML Suite',function(){
 
     test('test Dot',(done)=>{
 
-      exec('java -jar '+path.resolve(__dirname+'/../bin/plantuml.8031.jar')+' -testdot',(e,r)=>{
+      exec('java -jar '+path.resolve(__dirname+'/../bin/plantuml.8033.jar')+' -testdot',(e,r)=>{
         if(e){
           done(e);
           return e;
@@ -47,26 +45,78 @@ suite('ESF-PUML Suite',function(){
   });
 
   suite('run',function(){
-    this.timeout(60000);
+    const tmOut=60000;
+    this.timeout(tmOut);
 
-    setup((done)=>{
+    suiteSetup((done)=>{
 
       //clean out dir
       fs.emptyDir(dir.out,(e)=>{
         if(e){
           done(e);
         }else{
-          rdr=rdr||new Rdr();
-          done();
+          
+          let 
+            subDirs=[
+              'rdr',
+              'rs',
+              'fpng',
+              'spng',
+              'ssvg'
+            ],
+            wtr=[]
+            ;
+          
+          subDirs.forEach((sd)=>{
+            wtr.push(new Promise((rs1,rj1)=>{
+              
+              var subDir=path.resolve(dir.out+'/'+sd);              
+              fs.ensureDir(subDir,(e1)=>{
+                
+                if(e1){
+                  rj1(e1);
+                  return;
+                }
+                
+                fs.chmod(subDir,'0x666',(e3)=>{
+
+                  if(e3){
+                    rj1(e3);
+                    return;
+                  }
+
+                  rs1();  
+                  
+                });
+                
+              });
+              
+            }));
+          });
+          
+          Promise.all(wtr).then((r2)=>{
+
+            rdr=rdr||new Rdr();
+            done();
+            
+          }).catch((e2)=>{
+            
+            done(e2);
+            
+          });
+          
         }
       });
 
     });
 
     test('renderDir',(done)=>{
-      rdr.renderDir(dir.inp,dir.out).then((r)=>{
+      
+      const outSubDir='/rdr';
+      
+      rdr.renderDir(dir.inp,dir.out+outSubDir).then((r)=>{
 
-        fs.readdir(dir.out,(e,d)=>{
+        fs.readdir(dir.out+outSubDir,(e,d)=>{
 
           if(e){
             done(e);
@@ -91,13 +141,15 @@ suite('ESF-PUML Suite',function(){
 
     test('renderFile to png',(done)=>{
 
+      const outSubDir='/fpng';
+
       rdr.renderFile(
         path.resolve(dir.inp+'/test1.puml'),
-        dir.out,
+        dir.out+outSubDir,
         'png'
       ).then((r)=>{
 
-        fs.readdir(dir.out,(e,d)=>{
+        fs.readdir(dir.out+outSubDir,(e,d)=>{
 
           if(e){
             done(e);
@@ -119,6 +171,8 @@ suite('ESF-PUML Suite',function(){
     });
 
     test('renderString',(done)=>{
+
+      const outSubDir='/rs';
 
       var tstStr=`
       @startuml
@@ -146,11 +200,11 @@ suite('ESF-PUML Suite',function(){
 
       rdr.renderString(
         tstStr,
-        path.resolve(dir.out+'/test4.png'),
+        path.resolve(dir.out+outSubDir+'/test4.png'),
         'png'
       ).then((r)=>{
 
-        fs.readdir(dir.out,(e,d)=>{
+        fs.readdir(dir.out+outSubDir,(e,d)=>{
 
           if(e){
             done(e);
@@ -173,10 +227,12 @@ suite('ESF-PUML Suite',function(){
 
     test('stream png',(done)=>{
 
+      const outSubDir='/spng';
+
       try{
 
         var rs=fs.createReadStream ( path.resolve(dir.inp+'/test2.puml'),{encoding:'utf8', autoClose: true} );
-        var ws=fs.createWriteStream( path.resolve(dir.out+'/test5.png' ) );
+        var ws=fs.createWriteStream( path.resolve(dir.out+outSubDir+'/test5.png' ) );
         var ps=rdr.stream('png');
 
         rs
@@ -199,8 +255,14 @@ suite('ESF-PUML Suite',function(){
 
     test('stream svg',(done)=>{
 
+      const
+        outSubDir='/ssvg',
+        inpFile='test2',
+        outFile='test5'
+        ;
+      
       var etalon='etalon';
-      fs.readFile(path.resolve(dir.rt+'/test5.etalon.svg'),{encoding:"utf8"},(e,r)=>{
+      fs.readFile(path.resolve(dir.rt+'/'+outFile+'.etalon.svg'),{encoding:"utf8"},(e,r)=>{
 
         if(e){
           done(e);
@@ -211,9 +273,11 @@ suite('ESF-PUML Suite',function(){
 
         try{
 
-          var rs=fs.createReadStream ( path.resolve(dir.inp+'/test2.puml'),{encoding:'utf8', autoClose: true} );
-          var ws=fs.createWriteStream( path.resolve(dir.out+'/test5.svg' ) );
+          var rs=fs.createReadStream ( path.resolve(dir.inp+'/'+inpFile+'.puml'),{encoding:'utf8', autoClose: true} );
+          var ws=fs.createWriteStream( path.resolve(dir.out+outSubDir+'/'+outFile+'.svg' ) );
           var ps=rdr.stream('svg');
+          
+          //console.log( '\n\noutFile:\n'+path.resolve(dir.out+outSubDir+'/'+outFile+'.svg' )+'\n\n' );
 
           rs
             .pipe(ps)
@@ -225,7 +289,13 @@ suite('ESF-PUML Suite',function(){
 
           ws.on('finish',()=>{
 
-            fs.readFile(path.resolve(dir.out+'/test5.svg'),{encoding:"utf8"},(e1,r1)=>{
+            fs.readFile(path.resolve(dir.out+outSubDir+'/'+outFile+'.svg'),{encoding:"utf8"},(e1,r1)=>{
+
+              //console.log('\n\n--- out ---\n');
+              //console.log(e1);
+              //console.log('\n\n---\n\n');
+              //console.log(r1);
+              //console.log('\n--- end out ---\n\n');
 
               if(e1){
                 done(e1);

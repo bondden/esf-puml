@@ -1,5 +1,7 @@
 syntax: glob
 
+tst/d/out/**
+
 .directory
 .dld
 .idea
@@ -25,9 +27,6 @@ pids
 *.pid
 *.seed
 
-tst/d/out/*.svg
-#tst/d/**/*.svg
-tst/d/**/*.png
 tst/ut-cov
 tst/basic-cocomo-*
 lcov.info
