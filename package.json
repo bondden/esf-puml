@@ -1,6 +1,6 @@
 {
   "name": "esf-puml",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "description": "Renders puml-files from nested directories, a string or a single *.puml file",
   "main": "index.js",
   "scripts": {

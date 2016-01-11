@@ -18,7 +18,7 @@ export class PumlRenderer{
 
     var H=this;
 
-    this.pumlJar='bin/plantuml.8033.jar';
+    this.pumlJar='bin/plantuml.8034.jar';
     this.jarPth =path.resolve(__dirname+'/'+this.pumlJar);
 
     this.supportedFormats={
