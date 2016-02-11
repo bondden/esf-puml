@@ -26,7 +26,7 @@ suite('ESF-PUML Suite',function(){
 
     test('test Dot',(done)=>{
 
-      exec('java -jar '+path.resolve(__dirname+'/../bin/plantuml.8034.jar')+' -testdot',(e,r)=>{
+      exec('java -jar '+path.resolve(__dirname+'/../bin/plantuml.jar')+' -testdot',(e,r)=>{
         if(e){
           done(e);
           return e;

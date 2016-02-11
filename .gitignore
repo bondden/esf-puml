@@ -1,6 +1,11 @@
 syntax: glob
 
+# project specific
+
+npm.upd.sh
 tst/d/out/**
+
+# common
 
 .directory
 .dld

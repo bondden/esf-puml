@@ -20,7 +20,7 @@ class PumlRenderer {
 
     var H = this;
 
-    this.pumlJar = 'bin/plantuml.8034.jar';
+    this.pumlJar = 'bin/plantuml.jar';
     this.jarPth = path.resolve(__dirname + '/' + this.pumlJar);
 
     this.supportedFormats = {
@@ -37,6 +37,7 @@ class PumlRenderer {
 
       "setFmt": function setFmt() {
         let fmt = arguments.length <= 0 || arguments[0] === undefined ? 'svg' : arguments[0];
+
 
         let fmtOpt = H.supportedFormats.svg;
         if (H.supportedFormats.hasOwnProperty(fmt)) {
@@ -73,11 +74,13 @@ class PumlRenderer {
       "createQryDir": function createQryDir(inpDir, outDir) {
         let fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
 
+
         return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-o "' + outDir + '" "' + path.resolve(inpDir + '/**.puml') + '"';
       },
 
       "createQryFile": function createQryFile(inp, out) {
         let fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
+
 
         return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-o "' + out + '" "' + inp + '"';
       },
@@ -85,11 +88,13 @@ class PumlRenderer {
       "createQryStr": function createQryStr(inpStr, outFile) {
         let fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
 
+
         return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-pipe > "' + outFile + '"';
       },
 
       "createQryStm": function createQryStm() {
         let fmt = arguments.length <= 0 || arguments[0] === undefined ? 'svg' : arguments[0];
+
 
         return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-pipe';
       }
@@ -253,6 +258,7 @@ class PumlRenderer {
   stream() {
     let format = arguments.length <= 0 || arguments[0] === undefined ? 'svg' : arguments[0];
     let cwd = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
 
     var H = this;
 
