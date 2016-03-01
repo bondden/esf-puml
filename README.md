@@ -32,8 +32,9 @@ Version | Functionality                                                   | Stat
 0.2.0   | Single file rendering (req. [esf-puml-4](esf-puml-4))           | released
 0.3.0   | String input rendering (req. [esf-puml-2](esf-puml-2))          | released
 0.4.0   | Stream rendering to svg (partial req. [esf-puml-5](esf-puml-5)) | released
-0.5.0   | Stream rendering (req. [esf-puml-5](esf-puml-5))                |
-1.0.0   | API v.1.0 implementation (req. [esf-puml-6](esf-puml-6))        | -
+0.5.0   | String to string (req. [esf-puml-7](esf-puml-7))                |
+1.0.0   | API v.1.0 implementation (req. [esf-puml-6](esf-puml-6))        |
+1.1.0   | API v.1.1 implementation (req. [esf-puml-8](esf-puml-8))        | -
 
 ## Requirements
 ### esf-puml-1
@@ -55,16 +56,32 @@ esf-puml-4.2 | It should write the result in chosen format to Writable stream   
 esf-puml-5   | Process a stream                                                                                        | `stream`
 esf-puml-5.1 | It should read a stream                                                                                 |
 esf-puml-5.2 | It should return a Readable stream                                                                      |
-esf-puml-6   | It implement API v.1.0                                                                                  | -
+esf-puml-6   | It should implement API v.1.0                                                                           | 
+esf-puml-7   | Rendering a string input to string output                                                               | `renderStringToString`
+esf-puml-7.1 | It should accept puml-string as input                                                                   |
+esf-puml-7.2 | It should return an svg image                                                                           |
+esf-puml-8   | It should automatically detect source and provide an according method, API 1.1 imlementation            | `render`
 
 ## API
+### v.1.1
+
+```javascript
+Promise         render                ([string inpDir|inpFile], string outDir=null  [,format='svg'])  //
+Promise         renderDir             (string inpDir,           string outDir,      [,format='svg'])  //
+Promise         renderFile            (string inpFilePath,      string outDir       [,format='svg'])  //
+Promise         renderString          (string pumlString,       string outFilePath  [,format='svg'])  //
+Promise         renderStringToString  (string pumlString,       [,string format='svg'])               //
+stream.Duplex   stream                ([format='svg']           [,string cwd=null])                   // custom Cwd
+```
+
 ### v.1.0
 
 ```javascript
-Promise         renderDir    (string inpDir, outDir, [,format='svg'])                 //
-Promise         renderFile   (string inpFilePath, string outDir [,format='svg'])      //
-Promise         renderString (string pumlString, string outFilePath [,format='svg'])  //
-stream.Duplex   stream       ([,format='svg'][,cwd=null])                             // custom CWd
+Promise         renderDir             (string inpDir,       string outDir,      [,format='svg'])  //
+Promise         renderFile            (string inpFilePath,  string outDir       [,format='svg'])  //
+Promise         renderString          (string pumlString,   string outFilePath  [,format='svg'])  //
+Promise         renderStringToString  (string pumlString,   [,format='svg'])                      //
+stream.Duplex   stream                ([,format='svg']      [,cwd=null])                          // custom Cwd
 ```
 
 --------------------------------------------------------------------------------

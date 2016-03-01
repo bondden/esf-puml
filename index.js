@@ -249,6 +249,51 @@ class PumlRenderer {
     });
   }
 
+  renderStringToString(strIn) {
+    let format = arguments.length <= 1 || arguments[1] === undefined ? 'svg' : arguments[1];
+
+    var H = this;
+    return new Promise((rs, rj) => {
+
+      let out = '';
+      let qry = H._.createQryStm(format);
+      let pcs = exec(qry);
+
+      pcs.stdin.write(strIn, e => {
+        if (e) {
+          rj(e);
+        }
+        pcs.stdin.end();
+      });
+
+      pcs.on('error', e => {
+        rj(e);
+        return e;
+      });
+
+      pcs.stderr.on('data', data => {
+        rj('stderr: ' + data);
+        return 1;
+      });
+
+      pcs.on('close', code => {
+        if (code !== 0) {
+          rj(new Error(qry + ' exited with code ' + code));
+        } else {
+          rs(code);
+        }
+      });
+
+      pcs.stdout.on('data', d => {
+        out += d;
+      });
+
+      pcs.stdout.on('end', () => {
+        rs(out);
+      });
+    });
+  }
+
   /**
    * Renders a stream of utf8-encoded puml code to selected format. Currently supported SVG
    * @param  {string} format='svg' format of rendered image, supported formats: SVG. Default: SVG. Optional
