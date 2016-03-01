@@ -32,7 +32,7 @@ Version | Functionality                                                   | Stat
 0.2.0   | Single file rendering (req. [esf-puml-4](esf-puml-4))           | released
 0.3.0   | String input rendering (req. [esf-puml-2](esf-puml-2))          | released
 0.4.0   | Stream rendering to svg (partial req. [esf-puml-5](esf-puml-5)) | released
-0.5.0   | String to string (req. [esf-puml-7](esf-puml-7))                |
+0.5.0   | String to string (req. [esf-puml-7](esf-puml-7))                | released
 1.0.0   | API v.1.0 implementation (req. [esf-puml-6](esf-puml-6))        |
 1.1.0   | API v.1.1 implementation (req. [esf-puml-8](esf-puml-8))        | -
 
