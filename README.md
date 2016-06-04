@@ -10,14 +10,14 @@ A Node.Js module for converting [PlantUML](http://plantuml.com) files to graphic
 ## Installation
 
 ```bash
-npm install esf-puml
+npm i esf-puml
 ```
 
 ## Running unit tests locally
 Ensure `tst/d/out` is writable, or redefine it in `tst/index.js`.` Then run:
 
 ```bash
-esf-puml> npm install --save-dev
+esf-puml> npm i -D
 esf-puml> gulp test
 ```
 
