@@ -1,10 +1,10 @@
 {
   "name": "esf-puml",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Renders puml-files from nested directories, a string or a single *.puml file",
   "main": "index.js",
   "scripts": {
-    "test": "tst/index.js"
+    "test": "npm i -D; gulp tst"
   },
   "repository": {
     "type": "git",
@@ -32,7 +32,7 @@
     ".gitattributes",
     ".gitignore",
     ".npmignore",
-    "gulpfile.js"
+    "gulpfile.babel.js"
   ],
   "dependencies": {
     "babel-polyfill": "^6.9.1",
