@@ -35,7 +35,9 @@ class PumlRenderer {
      */
     this._ = {
 
-      "setFmt": function setFmt(fmt = 'svg') {
+      "setFmt": function setFmt() {
+        let fmt = arguments.length <= 0 || arguments[0] === undefined ? 'svg' : arguments[0];
+
 
         let fmtOpt = H.supportedFormats.svg;
         if (H.supportedFormats.hasOwnProperty(fmt)) {
@@ -69,22 +71,30 @@ class PumlRenderer {
         return new Buffer(s, 'utf8');
       },
 
-      "createQryDir": function createQryDir(inpDir, outDir, fmt = 'svg') {
+      "createQryDir": function createQryDir(inpDir, outDir) {
+        let fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
+
 
         return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-o "' + outDir + '" "' + path.resolve(inpDir + '/**.puml') + '"';
       },
 
-      "createQryFile": function createQryFile(inp, out, fmt = 'svg') {
+      "createQryFile": function createQryFile(inp, out) {
+        let fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
+
 
         return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-o "' + out + '" "' + inp + '"';
       },
 
-      "createQryStr": function createQryStr(inpStr, outFile, fmt = 'svg') {
+      "createQryStr": function createQryStr(inpStr, outFile) {
+        let fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
+
 
         return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-pipe > "' + outFile + '"';
       },
 
-      "createQryStm": function createQryStm(fmt = 'svg') {
+      "createQryStm": function createQryStm() {
+        let fmt = arguments.length <= 0 || arguments[0] === undefined ? 'svg' : arguments[0];
+
 
         return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-pipe';
       }
@@ -170,7 +180,9 @@ class PumlRenderer {
    * @param  {string} format='svg' format of rendered image, supported formats: SVG, PNG, EPS. Default: SVG. Optional
    * @return {Promise}             returns a Promise
    */
-  renderFile(fileIn, dirOut, format = 'svg') {
+  renderFile(fileIn, dirOut) {
+    let format = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
+
     var H = this;
     return new Promise((rs, rj) => {
 
@@ -201,7 +213,9 @@ class PumlRenderer {
     });
   }
 
-  renderString(strIn, fileOut, format = 'svg') {
+  renderString(strIn, fileOut) {
+    let format = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
+
     var H = this;
     return new Promise((rs, rj) => {
 
@@ -235,7 +249,9 @@ class PumlRenderer {
     });
   }
 
-  renderStringToString(strIn, format = 'svg') {
+  renderStringToString(strIn) {
+    let format = arguments.length <= 1 || arguments[1] === undefined ? 'svg' : arguments[1];
+
     var H = this;
     return new Promise((rs, rj) => {
 
@@ -284,7 +300,10 @@ class PumlRenderer {
    * @param  {string} cwd.         custom CWD. Deault: null. Optional
    * @return {stream.Duplex}       returns a duplex stream, that can be piped in and out.
    */
-  stream(format = 'svg', cwd = null) {
+  stream() {
+    let format = arguments.length <= 0 || arguments[0] === undefined ? 'svg' : arguments[0];
+    let cwd = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
 
     var H = this;
 
