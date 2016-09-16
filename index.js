@@ -271,8 +271,8 @@ class PumlRenderer {
         return e;
       });
 
-      pcs.stderr.on('data', data => {
-        rj('stderr: ' + data);
+      pcs.stderr.on('data', d => {
+        rj('stderr: ' + d);
         return 1;
       });
 

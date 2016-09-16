@@ -166,7 +166,7 @@ export class PumlRenderer{
             }
           ]
         });
-        svgo.optimize(r1,(r2)=>{
+        svgo.optimize(r1,r2=>{
 
           if(!r2){
             let e2=new Error('SVG Optimisation Error');
@@ -259,7 +259,7 @@ export class PumlRenderer{
         return e;
       });
 
-      pcs.stderr.on('data',(data)=>{
+      pcs.stderr.on('data',data=>{
         rj('stderr: '+data);
         return 1;
       });
@@ -295,12 +295,12 @@ export class PumlRenderer{
         return e;
       });
 
-      pcs.stderr.on('data',(data)=>{
-        rj('stderr: '+data);
+      pcs.stderr.on('data',d=>{
+        rj('stderr: '+d);
         return 1;
       });
 
-      pcs.on('close', (code)=>{
+      pcs.on('close', code=>{
         if(code!==0){
           rj(new Error(qry+' exited with code '+code));
         }else{
@@ -308,7 +308,7 @@ export class PumlRenderer{
         }
       });
 
-      pcs.stdout.on('data', (d)=>{
+      pcs.stdout.on('data', d=>{
         out+=d;
       });
 
@@ -348,7 +348,7 @@ export class PumlRenderer{
       }
     });
 
-    pcs.stdout.on('data', (d)=>{
+    pcs.stdout.on('data', d=>{
       stm.push(d);
     });
 
@@ -356,11 +356,11 @@ export class PumlRenderer{
       stm.push(null);
     });
 
-    pcs.stderr.on('data',(v)=>{
+    pcs.stderr.on('data',v=>{
       stm.push(null);
     });
 
-    pcs.on('error', (e)=>{
+    pcs.on('error', e=>{
       stm.push(null);
     });
 
