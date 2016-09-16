@@ -223,7 +223,7 @@ export class PumlRenderer{
 
           if(format==='svg'){
 
-            H.cleanSvgFile(fileOut).then((r)=>{
+            H.cleanSvgFile(fileOut).then(r=>{
               rs(fileOut);
             }).catch((e)=>{
               rj(e);
@@ -247,14 +247,14 @@ export class PumlRenderer{
       let qry=H._.createQryStr(strIn,fileOut,format);
       let pcs=exec(qry);
 
-      pcs.stdin.write(strIn,(e)=>{
+      pcs.stdin.write(strIn,e=>{
         if(e){
           rj(e);
         }
         pcs.stdin.end();
       });
 
-      pcs.on('error',(e)=>{
+      pcs.on('error',e=>{
         rj(e);
         return e;
       });
@@ -283,14 +283,14 @@ export class PumlRenderer{
       let qry=H._.createQryStm(format);
       let pcs=exec(qry);
 
-      pcs.stdin.write(strIn,(e)=>{
+      pcs.stdin.write(strIn,e=>{
         if(e){
           rj(e);
         }
         pcs.stdin.end();
       });
 
-      pcs.on('error',(e)=>{
+      pcs.on('error',e=>{
         rj(e);
         return e;
       });
