@@ -22,9 +22,9 @@ export class PumlRenderer{
     this.jarPth =path.resolve(__dirname+'/'+this.pumlJar);
 
     this.supportedFormats={
-      "svg":'-tsvg',
-      "eps":'-teps',
-      "png":''
+      svg:'-tsvg',
+      eps:'-teps',
+      png:''
     };
 
     /**
@@ -33,7 +33,7 @@ export class PumlRenderer{
      */
     this._={
 
-      "setFmt"       :function(fmt='svg'){
+      setFmt       :function(fmt='svg'){
 
         let fmtOpt=H.supportedFormats.svg;
         if(H.supportedFormats.hasOwnProperty(fmt)){
@@ -44,7 +44,7 @@ export class PumlRenderer{
 
       },
 
-      "customCwd"    :function(buf,cwd){
+      customCwd    :function(buf,cwd){
 
         let s=buf.toString('utf8');
 
@@ -74,7 +74,7 @@ export class PumlRenderer{
 
       },
 
-      "createQryDir" :function(inpDir,outDir,fmt='svg'){
+      createQryDir :function(inpDir,outDir,fmt='svg'){
 
         return  'java -jar '+H.jarPth+' ' +
                 '-charset "utf8" ' +
@@ -83,7 +83,7 @@ export class PumlRenderer{
 
       },
 
-      "createQryFile":function(inp,out,fmt='svg'){
+      createQryFile:function(inp,out,fmt='svg'){
 
         return  'java -jar '+H.jarPth+' ' +
                 '-charset "utf8" ' +
@@ -92,7 +92,7 @@ export class PumlRenderer{
 
       },
 
-      "createQryStr":function(inpStr,outFile,fmt='svg'){
+      createQryStr:function(inpStr,outFile,fmt='svg'){
 
         return  'java -jar '+H.jarPth+' ' +
                 '-charset "utf8" ' +
@@ -101,7 +101,7 @@ export class PumlRenderer{
 
       },
 
-      "createQryStm":function(fmt='svg'){
+      createQryStm:function(fmt='svg'){
 
         return  'java -jar '+H.jarPth+' ' +
                 '-charset "utf8" ' +

@@ -24,9 +24,9 @@ class PumlRenderer {
     this.jarPth = path.resolve(__dirname + '/' + this.pumlJar);
 
     this.supportedFormats = {
-      "svg": '-tsvg',
-      "eps": '-teps',
-      "png": ''
+      svg: '-tsvg',
+      eps: '-teps',
+      png: ''
     };
 
     /**
@@ -35,7 +35,7 @@ class PumlRenderer {
      */
     this._ = {
 
-      "setFmt": function setFmt() {
+      setFmt: function setFmt() {
         let fmt = arguments.length <= 0 || arguments[0] === undefined ? 'svg' : arguments[0];
 
 
@@ -47,7 +47,7 @@ class PumlRenderer {
         return fmtOpt;
       },
 
-      "customCwd": function customCwd(buf, cwd) {
+      customCwd: function customCwd(buf, cwd) {
 
         let s = buf.toString('utf8');
 
@@ -71,28 +71,28 @@ class PumlRenderer {
         return new Buffer(s, 'utf8');
       },
 
-      "createQryDir": function createQryDir(inpDir, outDir) {
+      createQryDir: function createQryDir(inpDir, outDir) {
         let fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
 
 
         return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-o "' + outDir + '" "' + path.resolve(inpDir + '/**.puml') + '"';
       },
 
-      "createQryFile": function createQryFile(inp, out) {
+      createQryFile: function createQryFile(inp, out) {
         let fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
 
 
         return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-o "' + out + '" "' + inp + '"';
       },
 
-      "createQryStr": function createQryStr(inpStr, outFile) {
+      createQryStr: function createQryStr(inpStr, outFile) {
         let fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
 
 
         return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-pipe > "' + outFile + '"';
       },
 
-      "createQryStm": function createQryStm() {
+      createQryStm: function createQryStm() {
         let fmt = arguments.length <= 0 || arguments[0] === undefined ? 'svg' : arguments[0];
 
 
