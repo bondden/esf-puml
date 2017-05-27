@@ -75,28 +75,28 @@ class PumlRenderer {
         let fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
 
 
-        return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-o "' + outDir + '" "' + path.resolve(inpDir + '/**.puml') + '"';
+        return 'java -Djava.awt.headless=true -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-o "' + outDir + '" "' + path.resolve(inpDir + '/**.puml') + '"';
       },
 
       createQryFile: function createQryFile(inp, out) {
         let fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
 
 
-        return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-o "' + out + '" "' + inp + '"';
+        return 'java -Djava.awt.headless=true -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-o "' + out + '" "' + inp + '"';
       },
 
       createQryStr: function createQryStr(inpStr, outFile) {
         let fmt = arguments.length <= 2 || arguments[2] === undefined ? 'svg' : arguments[2];
 
 
-        return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-pipe > "' + outFile + '"';
+        return 'java -Djava.awt.headless=true -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-pipe > "' + outFile + '"';
       },
 
       createQryStm: function createQryStm() {
         let fmt = arguments.length <= 0 || arguments[0] === undefined ? 'svg' : arguments[0];
 
 
-        return 'java -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-pipe';
+        return 'java -Djava.awt.headless=true -jar ' + H.jarPth + ' ' + '-charset "utf8" ' + H._.setFmt(fmt) + ' ' + '-pipe';
       }
 
     };
